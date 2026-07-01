@@ -7,6 +7,14 @@ export interface CombinedTranscription extends TranscriptionSegment {
 }
 export type ThemeMode = 'dark' | 'light' | 'system';
 
+export type InterviewDomain = 'software_engineering' | 'healthcare' | 'finance';
+
+export const DOMAIN_LABELS: Record<InterviewDomain, string> = {
+  software_engineering: 'Software Engineering',
+  healthcare: 'Healthcare',
+  finance: 'Finance',
+};
+
 export interface AppConfig {
   pageTitle: string;
   pageDescription: string;

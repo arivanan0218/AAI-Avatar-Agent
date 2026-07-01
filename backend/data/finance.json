@@ -1,0 +1,106 @@
+{
+  "domain": "finance",
+  "description": "Financial technology, quantitative finance, and banking AI concepts for technical interviews",
+  "topics": [
+    {
+      "concept": "Stocks, Bonds, and Asset Classes",
+      "explanation": "Stocks represent equity ownership in a company — returns come from dividends and capital appreciation; risk is higher. Bonds are debt instruments paying fixed interest (coupons); senior to equity in bankruptcy. Other asset classes: commodities, real estate (REITs), derivatives, currencies.",
+      "difficulty": "easy",
+      "tags": ["investing", "equities", "fixed-income"],
+      "sample_questions": [
+        "What is the fundamental difference between a stock and a bond?",
+        "How does a bond's price relate to interest rates?"
+      ]
+    },
+    {
+      "concept": "Risk Metrics — VaR and Expected Shortfall",
+      "explanation": "Value at Risk (VaR) estimates the maximum loss at a given confidence level over a time horizon. E.g. 1-day 99% VaR of $1M means there is a 1% chance of losing more than $1M in a day. Expected Shortfall (CVaR) is the expected loss given that VaR is exceeded — better captures tail risk.",
+      "difficulty": "easy",
+      "tags": ["risk-management", "var", "cvar"],
+      "sample_questions": [
+        "What is Value at Risk and what are its limitations?",
+        "Why is Expected Shortfall considered superior to VaR for tail risk?"
+      ]
+    },
+    {
+      "concept": "Fraud Detection with Machine Learning",
+      "explanation": "Fraud detection requires handling extreme class imbalance (fraud ~0.1% of transactions). Techniques: SMOTE oversampling, cost-sensitive learning, anomaly detection (Isolation Forest, Autoencoder). Features: transaction velocity, geographic distance, merchant category, behavioural baseline. Real-time scoring requires sub-100ms latency.",
+      "difficulty": "medium",
+      "tags": ["fraud-detection", "imbalanced-data", "anomaly-detection"],
+      "sample_questions": [
+        "How would you handle extreme class imbalance in a fraud detection model?",
+        "What features would you engineer for a card transaction fraud model?"
+      ]
+    },
+    {
+      "concept": "Credit Risk Scorecard Development",
+      "explanation": "Credit scorecards use logistic regression on binned, Weight of Evidence (WoE)-transformed features. Information Value (IV) guides variable selection. Model validation: KS statistic (separability), Gini coefficient (discrimination), PSI (Population Stability Index for drift monitoring). Requires fairness testing for protected attributes.",
+      "difficulty": "hard",
+      "tags": ["credit-risk", "scorecard", "woe", "validation"],
+      "sample_questions": [
+        "What is Weight of Evidence and why is it used in credit scorecards?",
+        "How do you validate a credit risk model over time?"
+      ]
+    },
+    {
+      "concept": "Algorithmic Trading Systems",
+      "explanation": "Algorithmic trading executes pre-programmed strategies based on price, volume, technical indicators, or sentiment. Latency is critical: co-location (servers at exchange), kernel bypass networking (DPDK), lock-free data structures, FPGA for ultra-low latency. Backtesting requires look-ahead bias prevention and realistic transaction cost modelling.",
+      "difficulty": "expert",
+      "tags": ["algo-trading", "hft", "latency", "backtesting"],
+      "sample_questions": [
+        "What is co-location and why does it matter in high-frequency trading?",
+        "How do you prevent look-ahead bias in a trading backtest?"
+      ]
+    },
+    {
+      "concept": "Know Your Customer (KYC) and AML",
+      "explanation": "KYC verifies customer identity using government ID, facial recognition, and database checks. Anti-Money Laundering (AML) monitors transaction patterns for suspicious activity (structuring, layering). ML models flag unusual patterns; human analysts review. Regulatory frameworks: FATF recommendations, FinCEN rules, EU AMLD.",
+      "difficulty": "medium",
+      "tags": ["kyc", "aml", "compliance", "fintech"],
+      "sample_questions": [
+        "What is transaction structuring (smurfing) and how would you detect it?",
+        "How does machine learning improve AML monitoring over rule-based systems?"
+      ]
+    },
+    {
+      "concept": "Time Series Forecasting for Finance",
+      "explanation": "Financial time series exhibit non-stationarity, volatility clustering (GARCH), and regime changes. Classical models: ARIMA, GARCH. ML models: LSTM, Temporal Fusion Transformer. Key challenges: non-stationarity (requires differencing), overfitting (low signal-to-noise ratio), and evaluation (walk-forward validation).",
+      "difficulty": "hard",
+      "tags": ["time-series", "forecasting", "lstm", "garch"],
+      "sample_questions": [
+        "What is the difference between stationarity and non-stationarity in financial time series?",
+        "How do you evaluate a price forecasting model correctly?"
+      ]
+    },
+    {
+      "concept": "Portfolio Optimisation — Modern Portfolio Theory",
+      "explanation": "Markowitz's MPT constructs the efficient frontier by maximising expected return for a given level of risk (variance). Key inputs: expected returns, covariance matrix. Extensions: Black-Litterman (incorporates investor views), risk parity (equal risk contribution). Practical challenges: covariance matrix estimation error at high dimensions.",
+      "difficulty": "hard",
+      "tags": ["portfolio", "mpt", "markowitz", "optimisation"],
+      "sample_questions": [
+        "What is the efficient frontier in Modern Portfolio Theory?",
+        "Why is covariance matrix estimation challenging for large portfolios?"
+      ]
+    },
+    {
+      "concept": "Open Banking and PSD2",
+      "explanation": "PSD2 (Payment Services Directive 2) mandates banks to open APIs to licensed third-party providers (TPPs). Two main services: Account Information Services (AIS) and Payment Initiation Services (PIS). Requires Strong Customer Authentication (SCA). Enables fintech innovation: budgeting apps, instant payments, aggregated financial views.",
+      "difficulty": "medium",
+      "tags": ["open-banking", "psd2", "api", "fintech"],
+      "sample_questions": [
+        "What does PSD2 require banks to expose and why does it matter for fintech?",
+        "What is Strong Customer Authentication (SCA)?"
+      ]
+    },
+    {
+      "concept": "Natural Language Processing for Financial Documents",
+      "explanation": "NLP on earnings calls, SEC filings, and news enables sentiment analysis (FinBERT), event extraction (mergers, earnings surprises), and automated report generation. Challenges: financial jargon, forward-looking statements, hedging language ('may', 'could'). Word embeddings trained on financial corpora outperform general models.",
+      "difficulty": "hard",
+      "tags": ["nlp", "finbert", "sentiment-analysis", "sec-filings"],
+      "sample_questions": [
+        "How does FinBERT differ from standard BERT for financial text?",
+        "How would you build a sentiment signal from earnings call transcripts?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "domain": "software_engineering",
+  "description": "Core computer science and software engineering concepts for technical interviews",
+  "topics": [
+    {
+      "concept": "Data Structures — Arrays vs Linked Lists",
+      "explanation": "Arrays store elements in contiguous memory, giving O(1) random access but O(n) insertion/deletion. Linked lists use nodes with pointers, giving O(1) insertion at head but O(n) access. Choose arrays for read-heavy workloads and linked lists for frequent insertions.",
+      "difficulty": "easy",
+      "tags": ["data-structures", "arrays", "linked-lists"],
+      "sample_questions": [
+        "When would you choose a linked list over an array?",
+        "What is the time complexity of accessing the k-th element in each?"
+      ]
+    },
+    {
+      "concept": "Stack and Queue",
+      "explanation": "Stack follows LIFO (Last In, First Out) — used for function call stacks, undo operations, DFS. Queue follows FIFO (First In, First Out) — used for BFS, task scheduling, message queues.",
+      "difficulty": "easy",
+      "tags": ["data-structures", "stack", "queue"],
+      "sample_questions": [
+        "Explain the difference between a stack and a queue.",
+        "Give a real-world use case for each."
+      ]
+    },
+    {
+      "concept": "Hash Maps and Hash Tables",
+      "explanation": "Hash maps provide O(1) average-case for insert, delete, and lookup via hash functions. Collisions are resolved by chaining (linked lists at each bucket) or open addressing. Load factor determines when to resize.",
+      "difficulty": "easy",
+      "tags": ["data-structures", "hashing"],
+      "sample_questions": [
+        "How do hash maps handle collisions?",
+        "What is a load factor and why does it matter?"
+      ]
+    },
+    {
+      "concept": "Big-O Notation and Time Complexity",
+      "explanation": "Big-O describes the worst-case growth rate of an algorithm. Common complexities: O(1) constant, O(log n) binary search, O(n) linear scan, O(n log n) merge sort, O(n²) nested loops. Space complexity follows the same notation.",
+      "difficulty": "easy",
+      "tags": ["algorithms", "complexity"],
+      "sample_questions": [
+        "What is the time complexity of binary search?",
+        "How would you determine the time complexity of nested loops?"
+      ]
+    },
+    {
+      "concept": "SOLID Principles",
+      "explanation": "Five OOP design principles: Single Responsibility (one reason to change), Open/Closed (open for extension, closed for modification), Liskov Substitution (subtypes replaceable for supertypes), Interface Segregation (small focused interfaces), Dependency Inversion (depend on abstractions, not concretions).",
+      "difficulty": "medium",
+      "tags": ["design", "oop", "solid"],
+      "sample_questions": [
+        "Explain the Single Responsibility Principle with a code example.",
+        "How does the Dependency Inversion Principle enable testability?"
+      ]
+    },
+    {
+      "concept": "REST API Design",
+      "explanation": "REST uses HTTP verbs (GET, POST, PUT, DELETE, PATCH) over stateless resources identified by URLs. Key principles: statelessness, uniform interface, resource-based URIs, proper status codes (200, 201, 400, 401, 404, 500). Versioning via URL path or header.",
+      "difficulty": "medium",
+      "tags": ["api", "rest", "http"],
+      "sample_questions": [
+        "What HTTP status codes would you use for a resource not found vs unauthorized?",
+        "How do you version a REST API?"
+      ]
+    },
+    {
+      "concept": "SQL vs NoSQL Databases",
+      "explanation": "SQL databases (PostgreSQL, MySQL) are relational, ACID-compliant, schema-enforced, and suited for complex queries. NoSQL databases (MongoDB, Cassandra, Redis) trade ACID for scalability, schema flexibility, and specialised access patterns. Choose based on consistency requirements and query patterns.",
+      "difficulty": "medium",
+      "tags": ["databases", "sql", "nosql"],
+      "sample_questions": [
+        "When would you choose a NoSQL database over a relational one?",
+        "What does ACID stand for and why does it matter?"
+      ]
+    },
+    {
+      "concept": "Caching Strategies",
+      "explanation": "Cache-aside (lazy loading): app checks cache, falls back to DB. Write-through: writes go to cache and DB simultaneously. Write-back: writes go to cache first, DB asynchronously. Cache eviction policies: LRU, LFU, TTL. Redis is the standard in-memory cache.",
+      "difficulty": "medium",
+      "tags": ["caching", "redis", "performance"],
+      "sample_questions": [
+        "Explain cache-aside vs write-through patterns.",
+        "How do you handle cache invalidation?"
+      ]
+    },
+    {
+      "concept": "Microservices Architecture",
+      "explanation": "Decompose a monolith into small, independently deployable services each owning its data store. Benefits: independent scaling, technology diversity, fault isolation. Challenges: network latency, distributed transactions, service discovery, operational complexity.",
+      "difficulty": "hard",
+      "tags": ["architecture", "microservices", "distributed-systems"],
+      "sample_questions": [
+        "What are the main challenges of moving from a monolith to microservices?",
+        "How do you handle a transaction that spans multiple microservices?"
+      ]
+    },
+    {
+      "concept": "Distributed Systems — CAP Theorem",
+      "explanation": "A distributed system can guarantee at most 2 of 3 properties: Consistency (all nodes see same data), Availability (every request gets a response), Partition Tolerance (system works despite network splits). Since partitions are unavoidable, systems trade C vs A. CP: HBase, Zookeeper. AP: Cassandra, CouchDB.",
+      "difficulty": "hard",
+      "tags": ["distributed-systems", "cap-theorem", "consistency"],
+      "sample_questions": [
+        "Explain the CAP theorem with a practical example.",
+        "When would you choose AP over CP?"
+      ]
+    },
+    {
+      "concept": "Message Queues and Event-Driven Architecture",
+      "explanation": "Message queues (Kafka, RabbitMQ, SQS) decouple producers from consumers, enabling async processing and load levelling. Kafka provides durable, ordered, replayable event streams. Event-driven architecture enables loose coupling but complicates tracing and debugging.",
+      "difficulty": "hard",
+      "tags": ["messaging", "kafka", "event-driven"],
+      "sample_questions": [
+        "When would you use Kafka over RabbitMQ?",
+        "How does event sourcing differ from traditional CRUD?"
+      ]
+    },
+    {
+      "concept": "CI/CD Pipelines",
+      "explanation": "Continuous Integration merges code frequently with automated testing. Continuous Delivery ensures code is always releasable. Continuous Deployment auto-deploys every passing build. Key tools: GitHub Actions, Jenkins, GitLab CI. Best practices: fast feedback, trunk-based development, feature flags.",
+      "difficulty": "medium",
+      "tags": ["devops", "ci-cd", "testing"],
+      "sample_questions": [
+        "What is the difference between Continuous Delivery and Continuous Deployment?",
+        "How would you structure a CI pipeline for a microservices project?"
+      ]
+    },
+    {
+      "concept": "System Design — URL Shortener",
+      "explanation": "Core components: ID generation (base62 encoding of auto-increment or UUID), key-value store (Redis + DynamoDB), redirect (HTTP 301 vs 302), analytics (click tracking via async events). Scale: read-heavy, cache popular URLs, CDN for global latency. Handle hash collisions with retry logic.",
+      "difficulty": "expert",
+      "tags": ["system-design", "scalability"],
+      "sample_questions": [
+        "Design a URL shortener that handles 100 million redirects per day.",
+        "How would you ensure short code uniqueness at scale?"
+      ]
+    },
+    {
+      "concept": "Concurrency — Deadlock, Race Conditions, Mutex",
+      "explanation": "Race condition: two threads access shared data concurrently with at least one write. Mutex (mutual exclusion lock) serialises access. Deadlock: two threads each hold a resource the other needs. Prevention: lock ordering, timeouts, lock-free data structures. Go channels and Python asyncio avoid shared-state concurrency.",
+      "difficulty": "hard",
+      "tags": ["concurrency", "threading", "locks"],
+      "sample_questions": [
+        "What is a race condition and how do you prevent it?",
+        "How would you detect and resolve a deadlock?"
+      ]
+    },
+    {
+      "concept": "Design Patterns — Observer, Factory, Singleton",
+      "explanation": "Observer: defines one-to-many dependency (event listeners, Redux store). Factory: encapsulates object creation logic. Singleton: ensures a single instance (often an anti-pattern in tests). Strategy: swappable algorithms at runtime. Prefer composition over inheritance.",
+      "difficulty": "medium",
+      "tags": ["design-patterns", "oop"],
+      "sample_questions": [
+        "Where would you apply the Observer pattern?",
+        "Why is Singleton often considered an anti-pattern?"
+      ]
+    }
+  ]
+}

@@ -1,16 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import type { InterviewDomain } from '@/lib/types';
 import { ConnectionDetails } from '@/app/api/connection-details/route';
 
-export default function useConnectionDetails() {
-  // Generate room connection details, including:
-  //   - A random Room name
-  //   - A random Participant name
-  //   - An Access Token to permit the participant to join the room
-  //   - The URL of the LiveKit server to connect to
-  //
-  // In real-world application, you would likely allow the user to specify their
-  // own participant name, and possibly to choose from existing rooms to join.
-
+export default function useConnectionDetails(domain: InterviewDomain = 'software_engineering') {
   const [connectionDetails, setConnectionDetails] = useState<ConnectionDetails | null>(null);
 
   const fetchConnectionDetails = useCallback(() => {
@@ -19,6 +11,7 @@ export default function useConnectionDetails() {
       process.env.NEXT_PUBLIC_CONN_DETAILS_ENDPOINT ?? '/api/connection-details',
       window.location.origin
     );
+    url.searchParams.set('domain', domain);
     fetch(url.toString())
       .then((res) => res.json())
       .then((data) => {
@@ -27,7 +20,7 @@ export default function useConnectionDetails() {
       .catch((error) => {
         console.error('Error fetching connection details:', error);
       });
-  }, []);
+  }, [domain]);
 
   useEffect(() => {
     fetchConnectionDetails();

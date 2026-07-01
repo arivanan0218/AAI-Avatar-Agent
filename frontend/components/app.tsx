@@ -9,7 +9,7 @@ import { SessionView } from '@/components/session-view';
 import { Toaster } from '@/components/ui/sonner';
 import { Welcome } from '@/components/welcome';
 import useConnectionDetails from '@/hooks/useConnectionDetails';
-import type { AppConfig } from '@/lib/types';
+import type { AppConfig, InterviewDomain } from '@/lib/types';
 
 const MotionWelcome = motion.create(Welcome);
 const MotionSessionView = motion.create(SessionView);
@@ -21,9 +21,9 @@ interface AppProps {
 export function App({ appConfig }: AppProps) {
   const room = useMemo(() => new Room(), []);
   const [sessionStarted, setSessionStarted] = useState(false);
-  const [isReconnecting, setIsReconnecting] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
-  const { connectionDetails, refreshConnectionDetails } = useConnectionDetails();
+  const [selectedDomain, setSelectedDomain] = useState<InterviewDomain>('software_engineering');
+  const { connectionDetails, refreshConnectionDetails } = useConnectionDetails(selectedDomain);
 
   useEffect(() => {
     const onDisconnected = (reason?: DisconnectReason) => {
@@ -37,15 +37,12 @@ export function App({ appConfig }: AppProps) {
       );
       
       if (shouldRetry && sessionStarted) {
-        setIsReconnecting(true);
-        setRetryCount(prev => prev + 1);
-        
+        setRetryCount((prev: number) => prev + 1);
+
         console.log(`Attempting reconnection (${retryCount + 1}/3)...`);
-        
-        // Wait a bit before retrying
+
         setTimeout(() => {
           refreshConnectionDetails();
-          setIsReconnecting(false);
         }, 2000);
         
         toastAlert({
@@ -55,7 +52,6 @@ export function App({ appConfig }: AppProps) {
       } else {
         setSessionStarted(false);
         setRetryCount(0);
-        setIsReconnecting(false);
         refreshConnectionDetails();
         
         // Show user-friendly message based on disconnection reason
@@ -143,7 +139,10 @@ export function App({ appConfig }: AppProps) {
       <MotionWelcome
         key="welcome"
         startButtonText={startButtonText}
-        onStartCall={() => setSessionStarted(true)}
+        onStartCall={(domain: InterviewDomain) => {
+            setSelectedDomain(domain);
+            setSessionStarted(true);
+          }}
         disabled={sessionStarted}
         initial={{ opacity: 0 }}
         animate={{ opacity: sessionStarted ? 0 : 1 }}

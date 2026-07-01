@@ -1,0 +1,106 @@
+{
+  "domain": "healthcare",
+  "description": "Healthcare IT, clinical AI, and medical informatics concepts for technical interviews",
+  "topics": [
+    {
+      "concept": "EHR vs EMR Systems",
+      "explanation": "Electronic Medical Records (EMR) are digital versions of a patient's chart within a single practice — not easily shared externally. Electronic Health Records (EHR) are interoperable across providers and systems, supporting care coordination. HIPAA and HL7 FHIR standards govern data exchange.",
+      "difficulty": "easy",
+      "tags": ["healthcare-it", "ehr", "emr", "fhir"],
+      "sample_questions": [
+        "What is the key difference between an EMR and an EHR?",
+        "What role does HL7 FHIR play in healthcare data exchange?"
+      ]
+    },
+    {
+      "concept": "HIPAA Compliance in Healthcare Software",
+      "explanation": "HIPAA (Health Insurance Portability and Accountability Act) requires protection of Protected Health Information (PHI). Technical safeguards: encryption at rest and in transit, access controls, audit logs. Business Associate Agreements (BAA) required for third-party vendors handling PHI.",
+      "difficulty": "easy",
+      "tags": ["compliance", "hipaa", "security", "phi"],
+      "sample_questions": [
+        "What technical safeguards does HIPAA require?",
+        "When is a Business Associate Agreement required?"
+      ]
+    },
+    {
+      "concept": "ICD-10 and Medical Coding",
+      "explanation": "ICD-10 (International Classification of Diseases) codes are used for diagnosis documentation and insurance billing. ICD-10-CM (clinical modification) has ~70,000 codes. Accurate coding affects reimbursement, clinical research, and epidemiological tracking. NLP can automate coding from clinical notes.",
+      "difficulty": "easy",
+      "tags": ["medical-coding", "icd-10", "nlp"],
+      "sample_questions": [
+        "What is ICD-10 and why is it important in healthcare IT?",
+        "How can NLP assist with medical coding from clinical notes?"
+      ]
+    },
+    {
+      "concept": "Clinical Decision Support Systems (CDSS)",
+      "explanation": "CDSS tools assist clinicians with drug interaction checks, dosing alerts, diagnostic suggestions, and guideline adherence. Alert fatigue (too many low-value alerts) is a major challenge. Rule-based systems are transparent; ML-based systems are powerful but require explainability (SHAP, LIME) for clinical trust.",
+      "difficulty": "medium",
+      "tags": ["cdss", "clinical-ai", "explainability"],
+      "sample_questions": [
+        "What is alert fatigue and how would you reduce it in a CDSS?",
+        "Why is explainability critical in clinical AI?"
+      ]
+    },
+    {
+      "concept": "Symptom Checker AI — Design and Liability",
+      "explanation": "AI symptom checkers perform triage, not diagnosis. Key design principles: confidence thresholds, mandatory escalation paths, human-in-the-loop review for high-risk outputs, regulatory compliance (FDA SaMD rules). Liability risk is managed by positioning the tool as decision support, not autonomous diagnosis.",
+      "difficulty": "medium",
+      "tags": ["clinical-ai", "symptom-checker", "liability", "fda"],
+      "sample_questions": [
+        "How would you design a symptom checker AI while managing clinical liability?",
+        "What does FDA Software as a Medical Device (SaMD) regulation require?"
+      ]
+    },
+    {
+      "concept": "Medical Imaging AI — Challenges",
+      "explanation": "Applying deep learning (CNNs) to medical imaging faces: class imbalance (rare diseases), annotation quality (requires radiologist labels), domain shift (different scanner manufacturers), interpretability requirements (saliency maps, Grad-CAM), and FDA 510(k) clearance for diagnostic use.",
+      "difficulty": "hard",
+      "tags": ["medical-imaging", "deep-learning", "cnn", "fda"],
+      "sample_questions": [
+        "What are the main challenges of applying ML to medical imaging?",
+        "How do you address class imbalance in a radiology AI dataset?"
+      ]
+    },
+    {
+      "concept": "Natural Language Processing in Clinical Notes",
+      "explanation": "Clinical NLP extracts structured data from free-text notes: named entity recognition for conditions/medications, relation extraction, negation detection ('no fever'). Models: BioBERT, ClinicalBERT, scispaCy. Challenges: medical abbreviations, negation, misspellings, PHI de-identification.",
+      "difficulty": "hard",
+      "tags": ["nlp", "clinical-notes", "biobert", "ner"],
+      "sample_questions": [
+        "How does negation detection differ in clinical NLP versus general NLP?",
+        "What is BioBERT and why is it preferred over standard BERT for medical text?"
+      ]
+    },
+    {
+      "concept": "Federated Learning for Healthcare",
+      "explanation": "Federated learning trains models across hospital nodes without sharing raw patient data — only model gradients are aggregated. Addresses privacy regulations (HIPAA, GDPR). Challenges: non-IID data distributions across hospitals, communication efficiency, gradient poisoning attacks. Differential privacy adds formal privacy guarantees.",
+      "difficulty": "expert",
+      "tags": ["federated-learning", "privacy", "distributed-ml"],
+      "sample_questions": [
+        "How does federated learning preserve patient privacy while training a shared model?",
+        "What is the non-IID data challenge in federated learning for healthcare?"
+      ]
+    },
+    {
+      "concept": "Interoperability — HL7 FHIR",
+      "explanation": "FHIR (Fast Healthcare Interoperability Resources) is a modern API standard for healthcare data exchange using REST and JSON/XML. Resources represent clinical entities (Patient, Observation, Medication). SMART on FHIR adds OAuth2-based authorisation for third-party apps accessing EHR data.",
+      "difficulty": "medium",
+      "tags": ["fhir", "interoperability", "api", "hl7"],
+      "sample_questions": [
+        "What makes FHIR better than older HL7 v2 for modern healthcare APIs?",
+        "What is SMART on FHIR used for?"
+      ]
+    },
+    {
+      "concept": "Drug-Drug Interaction Detection",
+      "explanation": "DDI detection uses knowledge graphs (DrugBank, NDF-RT), rule-based engines, and ML classifiers on structured prescriptions. NLP can also extract DDI mentions from literature. Real-time checks at the point of prescribing require sub-second latency. Severity levels (contraindicated, major, moderate, minor) drive alert thresholds.",
+      "difficulty": "hard",
+      "tags": ["drug-interactions", "knowledge-graph", "pharmacology"],
+      "sample_questions": [
+        "How would you build a real-time drug-drug interaction checker?",
+        "How do you represent drug knowledge for machine reasoning?"
+      ]
+    }
+  ]
+}
