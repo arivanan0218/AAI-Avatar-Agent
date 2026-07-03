@@ -141,7 +141,3 @@ Outputs: `backend/results/*.png` (charts), `backend/results/evaluation_metrics.j
 | LiveKit | Real-time audio/video transport |
 | Pinecone | Vector store (RAG) |
 | Anam AI | Talking avatar synthesis (optional — graceful voice-only fallback) |
-
-## Deliverables
-
-Full project deliverables live in [`docs/`](docs/) — final report, presentation deck, and video script. See [docs/README.md](docs/README.md).
