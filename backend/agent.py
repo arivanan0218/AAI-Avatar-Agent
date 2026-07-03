@@ -24,7 +24,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from livekit import agents
 from livekit.agents import Agent, AgentSession, RoomInputOptions, RoomOutputOptions
-from livekit.plugins import anam, cartesia, deepgram, openai as lk_openai, noise_cancellation, silero
+from livekit.plugins import anam, cartesia, deepgram, openai as lk_openai, noise_cancellation
 
 from interview.evaluator import AnswerEvaluator
 from interview.question_generator import QuestionGenerator
@@ -39,6 +39,9 @@ logger = logging.getLogger(__name__)
 
 SUPPORTED_DOMAINS = {"software_engineering", "healthcare", "finance"}
 DEFAULT_DOMAIN = "software_engineering"
+
+# The interviewer introduces itself with this name (avoids the LLM inventing "[Your Name]").
+INTERVIEWER_NAME = "Ava"
 
 # At most one follow-up probe per question, so the interview keeps moving.
 MAX_FOLLOWUPS_PER_QUESTION = 1
@@ -95,8 +98,9 @@ class InterviewAvatar(Agent):
       5. Otherwise → retrieve RAG context and generate the next question.
     """
 
-    def __init__(self, domain: str = DEFAULT_DOMAIN) -> None:
+    def __init__(self, domain: str = DEFAULT_DOMAIN, room=None) -> None:
         self.domain = domain
+        self.room = room  # LiveKit room, used to push the final report to the frontend
         self._intro_step = 0  # HR-style opening: 0=awaiting name, 1=awaiting self-intro, 2=done
         self.session_mgr = InterviewSessionManager(domain=domain, max_questions=8)
         self.question_gen = QuestionGenerator(domain=domain)
@@ -108,6 +112,7 @@ class InterviewAvatar(Agent):
             instructions=INTERVIEWER_SYSTEM_PROMPT.format(
                 domain=domain.replace("_", " ").title()
             )
+            + f"\n\nYour name is {INTERVIEWER_NAME}. If asked, that is what you are called."
         )
 
     async def on_user_turn_completed(self, turn_ctx, new_message):
@@ -172,6 +177,7 @@ class InterviewAvatar(Agent):
         if self.session_mgr.should_end_interview():
             self.session_mgr.is_active = False
             report = self.session_mgr.generate_report()
+            await self._publish_report(report)  # show the score card in the web UI
             verbal_cue = FINAL_REPORT_PROMPT.format(
                 domain=self.domain.replace("_", " "),
                 report_json=json.dumps(report, indent=2),
@@ -205,6 +211,29 @@ class InterviewAvatar(Agent):
                     f'to the discussion so far. The next question is about: "{next_q}"'
                 ),
             )
+
+    async def _publish_report(self, report: dict) -> None:
+        """Send a compact score summary to the frontend so it can show a result card."""
+        if self.room is None:
+            return
+        summary = {
+            "average_score": report["average_score"],
+            "recommendation": report["recommendation"],
+            "total_questions": report["total_questions"],
+            "duration_seconds": report["duration_seconds"],
+            "dimension_scores": report["dimension_scores"],
+            "strengths_count": len(report["strengths"]),
+            "improvements_count": len(report["areas_for_improvement"]),
+            "domain": report["domain"],
+        }
+        try:
+            payload = json.dumps({"type": "interview_report", "report": summary})
+            await self.room.local_participant.publish_data(
+                payload, topic="interview_report", reliable=True
+            )
+            logger.info("Published final report to frontend (score %.1f)", summary["average_score"])
+        except Exception as exc:  # never let UI publishing break the interview
+            logger.warning("Could not publish report to frontend: %s", exc)
 
     async def _handle_intro(self, turn_ctx) -> None:
         """Run the HR-style opening before any technical questions.
@@ -251,6 +280,10 @@ class InterviewAvatar(Agent):
 async def entrypoint(ctx: agents.JobContext):
     logger.info("Interview agent joining room: %s", ctx.room.name)
 
+    # Connect to the room FIRST — required before starting the avatar or session,
+    # otherwise the room connection isn't established in time (signal timeout).
+    await ctx.connect()
+
     # Read domain from room metadata
     domain = DEFAULT_DOMAIN
     if ctx.room.metadata:
@@ -267,10 +300,15 @@ async def entrypoint(ctx: agents.JobContext):
         stt=deepgram.STT(model="nova-3", language="multi"),
         llm=lk_openai.LLM(model="gpt-4o-mini"),
         tts=cartesia.TTS(model="sonic-2", voice="f786b574-daa5-4673-aa0c-cbe3e8534c02"),
-        vad=silero.VAD.load(),
+        # VAD omitted → AgentSession uses its bundled Silero VAD by default
+        # We mutate the chat context inside on_user_turn_completed (evaluation, RAG,
+        # follow-up/next-question director notes), so preemptive generation would just be
+        # discarded and regenerated — disable it to avoid the wasted work and warnings.
+        preemptive_generation=False,
     )
 
     # Anam AI avatar (graceful degradation if unavailable)
+    avatar_started = False
     try:
         persona = anam.PersonaConfig(
             name="Interview AI",
@@ -278,23 +316,44 @@ async def entrypoint(ctx: agents.JobContext):
         )
         avatar = anam.AvatarSession(persona_config=persona)
         await avatar.start(session, room=ctx.room)
+        avatar_started = True
         logger.info("Anam avatar ready")
     except Exception as exc:
         logger.warning("Avatar unavailable: %s", exc)
 
+    interview_agent = InterviewAvatar(domain=domain, room=ctx.room)
+
+    # Let the frontend ask for the score at any time (e.g. an "End & See Score" button),
+    # so the candidate can end early and still get a report on the questions answered so far.
+    @ctx.room.on("data_received")
+    def _on_data(packet):
+        if getattr(packet, "topic", None) != "request_report":
+            return
+        interview_agent.session_mgr.is_active = False
+        asyncio.create_task(
+            interview_agent._publish_report(interview_agent.session_mgr.generate_report())
+        )
+        logger.info("Score requested by candidate — publishing report early")
+
     await session.start(
         room=ctx.room,
-        agent=InterviewAvatar(domain=domain),
+        agent=interview_agent,
         room_input_options=RoomInputOptions(noise_cancellation=noise_cancellation.BVC()),
-        room_output_options=RoomOutputOptions(audio_enabled=True),
+        # When the avatar is active it publishes the audio+video track itself, so the agent
+        # must NOT also publish its own audio to the room (that conflicts with / suppresses
+        # the avatar). If the avatar failed to start, publish agent audio directly as a
+        # fallback so the candidate can still hear the interviewer.
+        room_output_options=RoomOutputOptions(audio_enabled=not avatar_started),
     )
 
     domain_label = domain.replace("_", " ").title()
     await session.generate_reply(
         instructions=(
-            f"Open the interview like a warm, professional HR interviewer. Greet the candidate, "
-            f"introduce yourself as the AI interviewer for the {domain_label} position, and make them "
-            f"feel at ease. Then ask for their name so you can get started. Keep it brief and friendly."
+            f"Open the interview like a warm, professional HR interviewer. Greet the candidate and "
+            f"introduce yourself as {INTERVIEWER_NAME}, the AI interviewer for the {domain_label} "
+            f"position. Use the name {INTERVIEWER_NAME} exactly — never say a placeholder like "
+            f"'[Your Name]'. Make them feel at ease, then ask for their name so you can get started. "
+            f"Keep it brief and friendly."
         )
     )
 

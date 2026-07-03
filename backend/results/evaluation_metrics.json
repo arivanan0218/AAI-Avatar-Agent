@@ -1,0 +1,133 @@
+{
+  "params": {
+    "llm_model": "gpt-4o-mini",
+    "embedding_model": "text-embedding-3-large",
+    "temperature": 0.1,
+    "num_questions": 8,
+    "weight_technical_accuracy": 0.5,
+    "weight_completeness": 0.3,
+    "weight_communication": 0.2,
+    "recommend_threshold": 6.5,
+    "scoring_methods": "chain_of_thought,direct",
+    "domain": "software_engineering"
+  },
+  "summary": {
+    "mean_strong_cot": 8.4375,
+    "mean_weak_cot": 4.6625000000000005,
+    "mean_strong_direct": 8.225000000000001,
+    "mean_weak_direct": 3.8000000000000003,
+    "gap_cot": 3.7749999999999995,
+    "gap_direct": 4.425000000000001,
+    "cot_improvement_over_direct": -0.6500000000000012,
+    "cosine_strong_to_question": 0.6064995789695422,
+    "cosine_weak_to_question": 0.5359495312960105
+  },
+  "per_question": [
+    {
+      "q": 1,
+      "difficulty": "easy",
+      "s_cot": 9.5,
+      "w_cot": 3.7,
+      "s_dir": 8.5,
+      "w_dir": 3.1
+    },
+    {
+      "q": 2,
+      "difficulty": "easy",
+      "s_cot": 9.1,
+      "w_cot": 4.5,
+      "s_dir": 8.5,
+      "w_dir": 3.9
+    },
+    {
+      "q": 3,
+      "difficulty": "medium",
+      "s_cot": 7.8,
+      "w_cot": 6.2,
+      "s_dir": 7.7,
+      "w_dir": 3.9
+    },
+    {
+      "q": 4,
+      "difficulty": "medium",
+      "s_cot": 9.2,
+      "w_cot": 5.2,
+      "s_dir": 7.7,
+      "w_dir": 2.9
+    },
+    {
+      "q": 5,
+      "difficulty": "medium",
+      "s_cot": 8.5,
+      "w_cot": 4.9,
+      "s_dir": 8.5,
+      "w_dir": 3.9
+    },
+    {
+      "q": 6,
+      "difficulty": "hard",
+      "s_cot": 7.8,
+      "w_cot": 3.9,
+      "s_dir": 8.3,
+      "w_dir": 3.9
+    },
+    {
+      "q": 7,
+      "difficulty": "hard",
+      "s_cot": 8.3,
+      "w_cot": 2.7,
+      "s_dir": 8.3,
+      "w_dir": 3.9
+    },
+    {
+      "q": 8,
+      "difficulty": "expert",
+      "s_cot": 7.3,
+      "w_cot": 6.2,
+      "s_dir": 8.3,
+      "w_dir": 4.9
+    }
+  ],
+  "similarity": [
+    {
+      "q": 1,
+      "strong": 0.6814171610181647,
+      "weak": 0.6570238675578537
+    },
+    {
+      "q": 2,
+      "strong": 0.5271402089023287,
+      "weak": 0.4570994427734398
+    },
+    {
+      "q": 3,
+      "strong": 0.6438648964141049,
+      "weak": 0.5330717726600018
+    },
+    {
+      "q": 4,
+      "strong": 0.5920616656885356,
+      "weak": 0.4080449206681299
+    },
+    {
+      "q": 5,
+      "strong": 0.5822346858280789,
+      "weak": 0.6601083981342567
+    },
+    {
+      "q": 6,
+      "strong": 0.5987878578262387,
+      "weak": 0.5028604464701375
+    },
+    {
+      "q": 7,
+      "strong": 0.6272985187947027,
+      "weak": 0.4823420747128241
+    },
+    {
+      "q": 8,
+      "strong": 0.5991916372841828,
+      "weak": 0.5870453273914407
+    }
+  ]
+}

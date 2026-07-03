@@ -1,0 +1,27 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="InterviewAI logo">
+  <defs>
+    <linearGradient id="ia-bg" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="ia-spark" x1="15" y1="10" x2="26" y2="21" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded badge -->
+  <rect width="40" height="40" rx="11" fill="url(#ia-bg)"/>
+
+  <!-- Speech / interview bubble -->
+  <path
+    d="M13.5 7.5h13A5 5 0 0 1 31.5 12.5v6A5 5 0 0 1 26.5 23.5H19.8l-6.1 5.2a1 1 0 0 1-1.65-.77V23.5H13.5A5 5 0 0 1 8.5 18.5v-6A5 5 0 0 1 13.5 7.5Z"
+    fill="white"/>
+
+  <!-- AI sparkle inside the bubble -->
+  <path
+    d="M20 10c0 4.1 1.4 5.5 5.5 5.5-4.1 0-5.5 1.4-5.5 5.5 0-4.1-1.4-5.5-5.5-5.5 4.1 0 5.5-1.4 5.5-5.5Z"
+    fill="url(#ia-spark)"/>
+  <!-- small accent sparkle -->
+  <circle cx="26" cy="11.5" r="1.4" fill="url(#ia-spark)"/>
+</svg>

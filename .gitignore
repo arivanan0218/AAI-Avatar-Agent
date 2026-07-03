@@ -11,3 +11,8 @@ wheels/
 venv
 .env
 agent-starter-react/.env.local
+
+# MLflow experiment tracking (regenerable; runs are large)
+mlruns/
+mlflow.db
+mlartifacts/

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { RoomEvent } from 'livekit-client';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   type AgentState,
@@ -14,6 +15,7 @@ import { AgentControlBar } from '@/components/livekit/agent-control-bar/agent-co
 import { ChatEntry } from '@/components/livekit/chat/chat-entry';
 import { ChatMessageView } from '@/components/livekit/chat/chat-message-view';
 import { MediaTiles } from '@/components/livekit/media-tiles';
+import { type InterviewReport, ReportCard } from '@/components/report-card';
 import useChatAndTranscription from '@/hooks/useChatAndTranscription';
 import { useDebugMode } from '@/hooks/useDebug';
 import type { AppConfig } from '@/lib/types';
@@ -37,14 +39,47 @@ export const SessionView = ({
 }: React.ComponentProps<'div'> & SessionViewProps) => {
   const { state: agentState } = useVoiceAssistant();
   const [chatOpen, setChatOpen] = useState(false);
+  const [report, setReport] = useState<InterviewReport | null>(null);
   const { messages, send } = useChatAndTranscription();
   const transcriptions = useTranscriptions();
   const room = useRoomContext();
 
   useDebugMode();
 
+  // Listen for the final interview report the agent publishes when the interview ends.
+  useEffect(() => {
+    const handleData = (payload: Uint8Array, _p?: unknown, _k?: unknown, topic?: string) => {
+      console.log('[InterviewAI] data received, topic =', topic);
+      if (topic && topic !== 'interview_report') return;
+      try {
+        const msg = JSON.parse(new TextDecoder().decode(payload));
+        if (msg?.type === 'interview_report' && msg.report) {
+          console.log('[InterviewAI] showing score card', msg.report);
+          setReport(msg.report as InterviewReport);
+        }
+      } catch {
+        // ignore non-JSON / unrelated data packets
+      }
+    };
+    room.on(RoomEvent.DataReceived, handleData);
+    return () => {
+      room.off(RoomEvent.DataReceived, handleData);
+    };
+  }, [room]);
+
   async function handleSendMessage(message: string) {
     await send(message);
+  }
+
+  // Ask the agent to score the interview so far and show the result card.
+  async function handleFinish() {
+    try {
+      const payload = new TextEncoder().encode(JSON.stringify({ type: 'request_report' }));
+      await room.localParticipant.publishData(payload, { reliable: true, topic: 'request_report' });
+      console.log('[InterviewAI] requested score (published request_report)');
+    } catch (e) {
+      console.error('[InterviewAI] failed to request interview report', e);
+    }
   }
 
   useEffect(() => {
@@ -113,11 +148,18 @@ export const SessionView = ({
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex items-center space-x-3">
+            <div className="hidden items-center space-x-1 text-sm text-gray-600 sm:flex dark:text-gray-400">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
               <span>Connected</span>
             </div>
+            <button
+              type="button"
+              onClick={handleFinish}
+              className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700"
+            >
+              End &amp; See Score
+            </button>
           </div>
         </div>
       </div>
@@ -208,6 +250,11 @@ export const SessionView = ({
           </div>
         </motion.div>
       </div>
+
+      {/* Final score card (shown when the agent publishes the interview report) */}
+      <AnimatePresence>
+        {report && <ReportCard report={report} onClose={() => setReport(null)} />}
+      </AnimatePresence>
     </main>
   );
 };
